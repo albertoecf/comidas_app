@@ -2,6 +2,7 @@
 //import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import './category_meals_screen.dart';
 import './categories_screen.dart';
 
 void main() => runApp(MyApp());
@@ -30,7 +31,11 @@ class MyApp extends StatelessWidget {
               ),
             ),
       ),
-      home: CategoriesScreen(),
+      //home: CategoriesScreen(), siempre puedo llamar a home con "/"
+      routes: { '/': (ctx) => CategoriesScreen(),
+      CategoryMealsScreen.routeName : (ctx) => CategoryMealsScreen()
+      //  '/category-meals':(ctx) =>CategoryMealsScreen() - podemos armar una propiedad 
+      }
     );
   }
 }

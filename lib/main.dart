@@ -2,6 +2,7 @@
 //import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import './screens/tabs_screen.dart';
 import './models/meal.dart';
 import './screens/meal_detail_screen.dart';
 import './screens/category_meals_screen.dart';
@@ -34,8 +35,9 @@ class MyApp extends StatelessWidget {
             ),
       ),
       //home: CategoriesScreen(), siempre puedo llamar a home con "/"
+      initialRoute: '/', // the default value is '/' 
       routes: {
-        '/': (ctx) => CategoriesScreen(),
+        '/': (ctx) => TabsScreen(),
         CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
         MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
         //  '/category-meals':(ctx) =>CategoryMealsScreen() - podemos armar una propiedad

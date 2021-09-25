@@ -2,6 +2,7 @@
 //import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'dummy_data.dart';
 import './screens/filters_screen.dart';
 import './screens/tabs_screen.dart';
 import './models/meal.dart';
@@ -9,9 +10,54 @@ import './screens/meal_detail_screen.dart';
 import './screens/category_meals_screen.dart';
 import './screens/categories_screen.dart';
 
+
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lactose': false,
+    "vegeterian": false,
+    "vegan": false
+  };
+
+  // We want different food regardin the filters- 
+  // So we can manage the available food from main
+  List<Meal> _availableMeals= DUMMY_MEALS; 
+
+
+
+// We use this method to receive filter information from filters_screen
+  void _setFilters(Map<String, bool> filterData){
+    setState(() {
+      _filters = filterData;
+
+      _availableMeals = DUMMY_MEALS.where((meal) {
+        if (_filters['gluten'] && !meal.isGlutenFree){
+          return false;
+        }
+        if (_filters['lactose'] && !meal.isLactoseFree){
+          return false;
+        }
+        if (_filters['vegan'] && !meal.isVegan){
+          return false;
+        }
+        if (_filters['vegeterian'] && !meal.isVegetarian){
+          return false;
+        }
+        // to keep the meal if not condition
+        return true;
+      }).toList();
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,12 +82,16 @@ class MyApp extends StatelessWidget {
             ),
       ),
       //home: CategoriesScreen(), siempre puedo llamar a home con "/"
-      initialRoute: '/', // the default value is '/' 
+      initialRoute: '/', // the default value is '/'
       routes: {
-        '/': (ctx) => TabsScreen(),
-        CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(),
+        '/': (ctx) => TabsScreen(), 
+        // We can pass data ( i.e: DUMMY_MEALS) to categoryMealsScreen. 
+        // (we want to manage our availableMeals from main)
+        CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(_availableMeals),
         MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
-        FiltersScreen.routeName : (ctx) => FiltersScreen(),
+        // As we are createing FiltersScreen from main file, we can pass _setFilters, and then receive from 
+        // FilterScreen 
+        FiltersScreen.routeName: (ctx) => FiltersScreen(_filters,_setFilters),
         //  '/category-meals':(ctx) =>CategoryMealsScreen() - podemos armar una propiedad
       },
       onGenerateRoute: (settings) {
